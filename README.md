@@ -1,8 +1,17 @@
-#Recipes Web App
+# Recipes Web App
 
-A basic CRUD app do record favourite recipes.
+A basic CRUD app to record favourite recipes.
 
-To run tests run the following command from the root directory:
+## The following commands can be executed from the project root:
+
+
+#### To run the tests:
 ```
 make test
+```
+
+
+#### To run the web app locally:
+```
+make start
 ```
