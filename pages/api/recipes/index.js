@@ -4,7 +4,7 @@ export default (req, res) => {
     res.json({})
   }
   else {
-    res.status(400)
+    res.status(400).end()
   }
 }
 
