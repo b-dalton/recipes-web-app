@@ -1,10 +1,14 @@
 export default (req, res) => {
   if (req.method === 'GET') {
     res.status(200)
-    res.json({})
+    res.json(
+      {
+        data: "data"
+      }
+    )
   }
   else {
-    res.status(400).end()
+    res.status(400)
   }
 }
 
