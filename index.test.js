@@ -44,5 +44,16 @@ describe('GET /recipes', () => {
       expect(response.status).toBeCalledWith(200)
       expect(response.json).toBeCalledWith(expect.any(Object))
     })
+
+
+    test('Returns a single resource object with a data top level member', () => {
+      const request = { method: 'GET' }
+      const response = { status: jest.fn(), json: jest.fn() }
+
+      getRecipes(request, response)
+
+      expect(response.status).toBeCalledWith(200)
+      expect(response.json).toBeCalledWith({data: "data"})
+    })
   })
 })
