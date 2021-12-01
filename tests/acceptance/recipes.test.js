@@ -1,4 +1,4 @@
-import getRecipes from './pages/api/recipes';
+import getRecipes from '../../pages/api/recipes';
 
 describe('GET /recipes', () => {
   describe('When the request method is PUT', () => {
