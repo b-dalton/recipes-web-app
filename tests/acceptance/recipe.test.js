@@ -29,20 +29,6 @@ describe('GET api/recipes/[recipe]', () => {
       getRecipe.default(request, response);
 
       expect(response.status).toBeCalledWith(200);
-      expect(response.json).toBeCalledWith(
-        expect.objectContaining({
-          data: {
-            title: 'Title',
-            ingredients: ['tomato'],
-            prepTime: '5 mins',
-            cookTime: '30 mins',
-            serves: 3,
-            instructions: 'cook tomato',
-            author: 'Ben',
-            timestamp: 20211201,
-          },
-        })
-      );
     });
   });
   describe('When the request method is GET', () => {
