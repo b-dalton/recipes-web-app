@@ -22,7 +22,7 @@ describe('GET api/recipes/[recipe]', () => {
     });
   });
   describe('When the request method is GET', () => {
-    test('Returns a 200 OK Response with a recipe', () => {
+    test('Returns a 200 OK Response', () => {
       const request = { method: 'GET' };
       const response = { status: jest.fn(), json: jest.fn() };
 
@@ -32,7 +32,7 @@ describe('GET api/recipes/[recipe]', () => {
     });
   });
   describe('When the request method is GET', () => {
-    test('Returns a 200 OK Response', () => {
+    test('Returns a 200 OK Response with a single recipe', () => {
       const request = { method: 'GET' };
       const response = { status: jest.fn(), json: jest.fn() };
       const getRecipeGatewayMethodSpy = jest.spyOn(getRecipe,"getSingleRecipe")
