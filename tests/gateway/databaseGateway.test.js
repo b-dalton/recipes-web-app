@@ -34,5 +34,6 @@ describe('Database gateway', () => {
     retrieveRecipesMethodSpy.mockReturnValue(recipes);
 
     expect(databaseGateway.retrieveRecipes()).toBe(recipes);
+    expect(retrieveRecipesMethodSpy).toHaveBeenCalled();
   });
 });
