@@ -35,7 +35,10 @@ describe('GET api/recipes/[recipe]', () => {
     test('Returns a 200 OK Response with a single recipe', () => {
       const request = { method: 'GET' };
       const response = { status: jest.fn(), json: jest.fn() };
-      const getRecipeGatewayMethodSpy = jest.spyOn(getRecipe,"getSingleRecipe")
+      const getRecipeGatewayMethodSpy = jest.spyOn(
+        getRecipe,
+        'getSingleRecipe'
+      );
 
       const recipe = {
         title: 'Another Title',
@@ -46,7 +49,7 @@ describe('GET api/recipes/[recipe]', () => {
         instructions: 'cook tomato',
         author: 'Ben',
         timestamp: 20211201,
-      }
+      };
 
       getRecipeGatewayMethodSpy.mockReturnValue(recipe);
       getRecipe.default(request, response);
