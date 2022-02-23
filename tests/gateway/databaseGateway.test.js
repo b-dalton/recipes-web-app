@@ -17,6 +17,7 @@ beforeAll(async () => {
   await client.connect();
   await client.query(
     `CREATE TABLE recipes (
+        id SERIAL PRIMARY KEY,
         title varchar(255) NOT NULL, 
         ingredients text[] NOT NULL, 
         prep_time VARCHAR(50) NOT NULL, 
@@ -24,16 +25,17 @@ beforeAll(async () => {
         serves INT NOT NULL, 
         instructions TEXT NOT NULL, 
         author VARCHAR (50) NOT NULL, 
-        updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+        created_at TIMESTAMP DEFAULT NOW() NOT NULL,
+        updated_at TIMESTAMP DEFAULT NOW() NOT NULL
       );`
   );
   await client.query(
     `INSERT INTO 
-        recipes (title, ingredients, prep_time, cook_time, serves, instructions, author, updated) 
+        recipes (title, ingredients, prep_time, cook_time, serves, instructions, author) 
     VALUES 
-        ('Spinach recipe', '{\"spinach\"}', '5 mins', '10 mins', 3, 'cook spinach', 'Ben', '2022-01-29T18:30:13.542Z'),
-        ('Tomato Soup', '{\"tomato puree\", \"coconut milk\", \"water\"}', '15 mins', '30 mins', 2, 'Mix tomato puree, coconut milk and water and bring to boil. Season with salt and pepper', 'Ben', '2022-01-12T13:33:03.542Z'),
-        ('Sweet Potato Mash', '{\"2 sweet potatoes\", \"50ml milk\", \"2 tbsp butter\"}', '10 mins', '30 mins', 4, 'Boil sweet potatoes until soft. Mash sweet potatoes, with butter and milk', 'Ben', '2021-12-16T08:12:08.542Z');`
+        ('Spinach recipe', '{\"spinach\"}', '5 mins', '10 mins', 3, 'cook spinach', 'Ben'),
+        ('Tomato Soup', '{\"tomato puree\", \"coconut milk\", \"water\"}', '15 mins', '30 mins', 2, 'Mix tomato puree, coconut milk and water and bring to boil. Season with salt and pepper', 'Ben'),
+        ('Sweet Potato Mash', '{\"2 sweet potatoes\", \"50ml milk\", \"2 tbsp butter\"}', '10 mins', '30 mins', 4, 'Boil sweet potatoes until soft. Mash sweet potatoes, with butter and milk', 'Ben');`
   );
 });
 
@@ -79,14 +81,65 @@ describe('Database gateway', () => {
     expect(retrieveRecipesMethodSpy).toHaveBeenCalled();
   });
 
-  it('Receives recipes from database', async () => {
-    const allRecords = await client.query('SELECT * FROM recipes');
-    console.log('all recipes:', allRecords.rows);
+  it('Receives recipes from datatabse', async () => {
+    const databaseGateway = new DatabaseGateway();
+    const allRecipes = await databaseGateway.retrieveRecipes(client);
 
-    expect(allRecords.rows[0].author).toBe('Ben');
-    expect(allRecords.rows[0].title).toBe('Spinach recipe');
-    expect(allRecords.rows[1].title).toBe('Tomato Soup');
-    expect(allRecords.rows[1].prep_time).toBe('15 mins');
-    expect(allRecords.rows[2].title).toBe('Sweet Potato Mash');
+    const expectedResponse = [
+      expect.objectContaining({
+        id: 1,
+        title: 'Spinach recipe',
+        ingredients: ['spinach'],
+        prep_time: '5 mins',
+        cook_time: '10 mins',
+        serves: 3,
+        instructions: 'cook spinach',
+        author: 'Ben',
+      }),
+      expect.objectContaining({
+        id: 2,
+        title: 'Tomato Soup',
+        ingredients: ['tomato puree', 'coconut milk', 'water'],
+        prep_time: '15 mins',
+        cook_time: '30 mins',
+        serves: 2,
+        instructions:
+          'Mix tomato puree, coconut milk and water and bring to boil. Season with salt and pepper',
+        author: 'Ben',
+      }),
+      expect.objectContaining({
+        id: 3,
+        title: 'Sweet Potato Mash',
+        ingredients: ['2 sweet potatoes', '50ml milk', '2 tbsp butter'],
+        prep_time: '10 mins',
+        cook_time: '30 mins',
+        serves: 4,
+        instructions:
+          'Boil sweet potatoes until soft. Mash sweet potatoes, with butter and milk',
+        author: 'Ben',
+      }),
+    ];
+
+    expect(allRecipes).toEqual(expect.arrayContaining(expectedResponse));
+  });
+
+  it('retrieves a single recipe from the database', async () => {
+    const databaseGateway = new DatabaseGateway();
+    const singleRecipe = await databaseGateway.retrieveSingleRecipe(client, 1);
+
+    const expectedRecipe = [
+      expect.objectContaining({
+        id: 1,
+        title: 'Spinach recipe',
+        ingredients: ['spinach'],
+        prep_time: '5 mins',
+        cook_time: '10 mins',
+        serves: 3,
+        instructions: 'cook spinach',
+        author: 'Ben',
+      }),
+    ];
+
+    expect(singleRecipe).toEqual(expect.arrayContaining(expectedRecipe));
   });
 });
