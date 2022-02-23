@@ -12,6 +12,7 @@ const credentials = {
 };
 
 const client = new Client(credentials);
+const databaseGateway = new DatabaseGateway(client);
 
 beforeAll(async () => {
   await client.connect();
@@ -45,45 +46,9 @@ afterAll(async () => {
 });
 
 describe('Database gateway', () => {
-  it('retrieve recipes method returns all recipes', () => {
-    const databaseGateway = new DatabaseGateway();
-
-    const retrieveRecipesMethodSpy = jest.spyOn(
-      databaseGateway,
-      'retrieveRecipes'
-    );
-
-    const recipes = [
-      {
-        title: 'Recipe 1',
-        ingredients: ['spinach'],
-        prepTime: '5 mins',
-        cookTime: '30 mins',
-        serves: 3,
-        instructions: 'cook spinach',
-        author: 'Ben',
-        timestamp: '21-12-16 09:17:03',
-      },
-      {
-        title: 'Another Recipe',
-        ingredients: ['tomato'],
-        prepTime: '10 mins',
-        cookTime: '20 mins',
-        serves: 1,
-        instructions: 'cook tomato',
-        author: 'Ben',
-        timestamp: '22-01-11 12:00:17',
-      },
-    ];
-    retrieveRecipesMethodSpy.mockReturnValue(recipes);
-
-    expect(databaseGateway.retrieveRecipes()).toBe(recipes);
-    expect(retrieveRecipesMethodSpy).toHaveBeenCalled();
-  });
-
   it('Receives recipes from datatabse', async () => {
-    const databaseGateway = new DatabaseGateway();
-    const allRecipes = await databaseGateway.retrieveRecipes(client);
+    const allRecipes = await databaseGateway.retrieveRecipes();
+    console.log('all recipes', allRecipes);
 
     const expectedResponse = [
       expect.objectContaining({
@@ -124,8 +89,7 @@ describe('Database gateway', () => {
   });
 
   it('retrieves a single recipe from the database', async () => {
-    const databaseGateway = new DatabaseGateway();
-    const singleRecipe = await databaseGateway.retrieveSingleRecipe(client, 1);
+    const singleRecipe = await databaseGateway.retrieveSingleRecipe(1);
 
     const expectedRecipe = [
       expect.objectContaining({
