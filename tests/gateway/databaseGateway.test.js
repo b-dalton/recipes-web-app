@@ -55,8 +55,8 @@ describe('Database gateway', () => {
         id: 1,
         title: 'Spinach recipe',
         ingredients: ['spinach'],
-        prep_time: '5 mins',
-        cook_time: '10 mins',
+        prepTime: '5 mins',
+        cookTime: '10 mins',
         serves: 3,
         instructions: 'cook spinach',
         author: 'Ben',
@@ -65,8 +65,8 @@ describe('Database gateway', () => {
         id: 2,
         title: 'Tomato Soup',
         ingredients: ['tomato puree', 'coconut milk', 'water'],
-        prep_time: '15 mins',
-        cook_time: '30 mins',
+        prepTime: '15 mins',
+        cookTime: '30 mins',
         serves: 2,
         instructions:
           'Mix tomato puree, coconut milk and water and bring to boil. Season with salt and pepper',
@@ -76,8 +76,8 @@ describe('Database gateway', () => {
         id: 3,
         title: 'Sweet Potato Mash',
         ingredients: ['2 sweet potatoes', '50ml milk', '2 tbsp butter'],
-        prep_time: '10 mins',
-        cook_time: '30 mins',
+        prepTime: '10 mins',
+        cookTime: '30 mins',
         serves: 4,
         instructions:
           'Boil sweet potatoes until soft. Mash sweet potatoes, with butter and milk',
@@ -96,8 +96,8 @@ describe('Database gateway', () => {
         id: 1,
         title: 'Spinach recipe',
         ingredients: ['spinach'],
-        prep_time: '5 mins',
-        cook_time: '10 mins',
+        prepTime: '5 mins',
+        cookTime: '10 mins',
         serves: 3,
         instructions: 'cook spinach',
         author: 'Ben',
@@ -106,4 +106,62 @@ describe('Database gateway', () => {
 
     expect(singleRecipe).toEqual(expect.arrayContaining(expectedRecipe));
   });
+
+  it('returns all recipes as a list of domain objects', async () => {
+    const allRecipes = await databaseGateway.retrieveRecipes();
+
+    const expectedRecipesResponse = [
+      expect.objectContaining({
+        id: 1,
+        title: 'Spinach recipe',
+        ingredients: ['spinach'],
+        prepTime: '5 mins',
+        cookTime: '10 mins',
+        serves: 3,
+        instructions: 'cook spinach',
+        author: 'Ben',
+      }),
+      expect.objectContaining({
+        id: 2,
+        title: 'Tomato Soup',
+        ingredients: ['tomato puree', 'coconut milk', 'water'],
+        prepTime: '15 mins',
+        cookTime: '30 mins',
+        serves: 2,
+        instructions: 'Mix tomato puree, coconut milk and water and bring to boil. Season with salt and pepper',
+        author: 'Ben',
+      }),
+      expect.objectContaining({
+        id: 3,
+        title: 'Sweet Potato Mash',
+        ingredients: ['2 sweet potatoes', '50ml milk', '2 tbsp butter'],
+        prepTime: '10 mins',
+        cookTime: '30 mins',
+        serves: 4,
+        instructions: 'Boil sweet potatoes until soft. Mash sweet potatoes, with butter and milk',
+        author: 'Ben',
+      })
+    ]
+
+    expect(allRecipes).toEqual(expect.arrayContaining(expectedRecipesResponse));
+  })
+
+  it('returns a single recipe domain object', async () => {
+    const recipe = await databaseGateway.retrieveSingleRecipe(1);
+
+    const expectedRecipe = [
+      expect.objectContaining({
+        id: 1,
+        title: 'Spinach recipe',
+        ingredients: ['spinach'],
+        prepTime: '5 mins',
+        cookTime: '10 mins',
+        serves: 3,
+        instructions: 'cook spinach',
+        author: 'Ben',
+      }),
+    ];
+
+    expect(recipe).toEqual(expect.arrayContaining(expectedRecipe));
+  })
 });
